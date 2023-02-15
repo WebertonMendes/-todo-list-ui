@@ -2,12 +2,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail, MdLockOutline } from "react-icons/md";
+import { FiEye, FiEyeOff } from "react-icons/fi"
 import { ToastContainer, toast } from "react-toastify";
 
 import { api } from "../../services/api";
 import { Logo } from "../../components/Logo";
 import { Container, Form, Fields, InputGroup, Button, Link } from "./styles";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 interface LoginFormData {
   email: string;
@@ -28,6 +30,8 @@ const userLoginFormSchema = yup.object().shape({
 });
 
 export function SignIn() {
+  const [viewPasswordInputValue, setViewPasswordInputValue] = useState(false);
+
   const {
     reset,
     register,
@@ -38,6 +42,10 @@ export function SignIn() {
   });
 
   const navigate = useNavigate();
+
+  function handleViewPasswordInputValue() {
+    setViewPasswordInputValue(!viewPasswordInputValue);
+  }
 
   const handleUserLogin: SubmitHandler<LoginFormData> = async (data) => {
     await api.post("auth", data)
@@ -130,10 +138,19 @@ export function SignIn() {
               <InputGroup className="input-error">
                 <MdLockOutline />
                 <input
-                  type="password"
+                  type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
                   {...register("password")}
                 />
+                {
+                  !viewPasswordInputValue
+                    ? <span className="viewPassword">
+                        <FiEyeOff onClick={handleViewPasswordInputValue} />
+                      </span>
+                    : <span className="viewPassword">
+                        <FiEye onClick={handleViewPasswordInputValue} />
+                      </span>
+                }
               </InputGroup>
               <p className="error-msg">{errors.password?.message}</p>
             </>
@@ -142,10 +159,19 @@ export function SignIn() {
               <InputGroup>
                 <MdLockOutline />
                 <input
-                  type="password"
+                  type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
                   {...register("password")}
                 />
+                {
+                  !viewPasswordInputValue
+                    ? <span className="viewPassword">
+                        <FiEyeOff onClick={handleViewPasswordInputValue} />
+                      </span>
+                    : <span className="viewPassword">
+                        <FiEye onClick={handleViewPasswordInputValue} />
+                      </span>
+                }
               </InputGroup>
             </>
           )}

@@ -59,13 +59,17 @@ export const InputGroup = styled.div`
   color: var(--text-body);
   border: 1px solid var(--gray-300);
   border-radius: 0.2rem;
-  padding: 0.2rem 0 0.2rem 1rem;
+  padding: 0.2rem 1rem;
 
   input {
     height: 2.4rem;
     width: 100%;
     background-color: var(--background);
     color: var(--text-body);
+  }
+
+  .viewPassword:hover {
+    cursor: pointer;
   }
 
   &.input-error {
