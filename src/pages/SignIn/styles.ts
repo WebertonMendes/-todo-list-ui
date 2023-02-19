@@ -17,10 +17,10 @@ export const Form = styled.form`
   justify-content: center;
   gap: 1rem;
 
-  width: 35vw;
+  width: 30vw;
   background: var(--shape);
   border-radius: 1rem;
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--gray-200);
   padding: 4rem 5rem;
   margin-top: 2rem;
 
@@ -30,11 +30,12 @@ export const Form = styled.form`
   }
 
   @media (max-width: 1080px) {
-    width: 45vw;
+    width: 50vw;
   }
 
   @media (max-width: 720px) {
-    width: 70vw;
+    padding: 4rem 3rem;
+    width: 85vw;
   }
 `;
 
@@ -57,7 +58,7 @@ export const InputGroup = styled.div`
 
   background-color: var(--background);
   color: var(--text-body);
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--gray-200);
   border-radius: 0.2rem;
   padding: 0.2rem 1rem;
 
@@ -79,16 +80,34 @@ export const InputGroup = styled.div`
 
 export const Button = styled.button`
   width: 100%;
+  height: 3rem;
   padding: 0.8rem;
   border-radius: 0.2rem;
+  position: relative;
 
   background-color: var(--blue-300);
   color: var(--shape);
 
   transition: background-color 0.4s;
 
-  &:hover {
-    background-color: var(--blue-500);
+  &.isLoading {
+    opacity: .7;
+
+    div {
+      position: absolute;
+      right: .2rem;
+      top: 0;
+    }
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+
+  &:not(.isLoading) {
+    &:hover {
+      background-color: var(--blue-500);
+    }
   }
 `;
 

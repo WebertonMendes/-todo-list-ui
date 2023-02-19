@@ -1,4 +1,6 @@
 import * as yup from "yup";
+import Lottie from 'react-lottie';
+import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail, MdLock, MdLockOutline } from "react-icons/md";
@@ -16,7 +18,7 @@ import {
 import { Link } from "./styles";
 import { api } from "../../services/api";
 import { Logo } from "../../components/Logo";
-import { useState } from "react";
+import { loadingSpinner } from "../../assets/animations"
 
 interface CreateUserFormData {
   email: string;
@@ -46,6 +48,7 @@ const createUserFormSchema = yup.object().shape({
 export function SignUp() {
   const [viewPasswordInputValue, setViewPasswordInputValue] = useState(false);
   const [viewConfirmPasswordInputValue, setViewConfirmPasswordInputValue] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     reset,
@@ -56,6 +59,12 @@ export function SignUp() {
     resolver: yupResolver(createUserFormSchema),
   });
 
+  const loadingSpinnerOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingSpinner,
+  }
+
   const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
     values
   ) => {
@@ -64,46 +73,53 @@ export function SignUp() {
       password: values.password,
     }
 
+    setIsLoading(true);
+
     await api.post("users", data)
     .then((response) => {
       if (response.status === 201)
-        reset();
+        setTimeout(() => {
+          setIsLoading(false);
+          reset();
 
-        toast("Usuário criado com sucesso!", {
-          position: "top-right",
-          autoClose: 8000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "colored",
-          type: "success",
-        });
+          toast("Usuário criado com sucesso!", {
+            position: "top-right",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+            type: "info",
+          });
+        }, 2000);
     })
     .catch((error) => {
+      setIsLoading(false);
+
       if (error.response?.status === 409) {
         toast("Usuário já cadastrado!", {
           position: "top-right",
           autoClose: 8000,
-          hideProgressBar: true,
+          hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "colored",
+          theme: "light",
           type: "error",
         });
       } else {
         toast("Erro ao criar o usuário, contate o administrador.!", {
           position: "top-right",
           autoClose: 8000,
-          hideProgressBar: true,
+          hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "colored",
+          theme: "light",
           type: "error",
         });
       }
@@ -146,6 +162,7 @@ export function SignUp() {
                 <input
                   type="email"
                   placeholder="Informe o e-mail"
+                  autoComplete="on"
                   {...register("email")}
                 />
               </InputGroup>
@@ -158,6 +175,7 @@ export function SignUp() {
                 <input
                   type="email"
                   placeholder="Informe o e-mail"
+                  autoComplete="on"
                   {...register("email")}
                 />
               </InputGroup>
@@ -171,6 +189,7 @@ export function SignUp() {
                 <input
                   type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
+                  autoComplete="off"
                   {...register("password")}
                 />
                 {
@@ -192,6 +211,7 @@ export function SignUp() {
                 <input
                   type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
+                  autoComplete="off"
                   {...register("password")}
                 />
                 {
@@ -214,6 +234,7 @@ export function SignUp() {
                 <input
                   type={ viewConfirmPasswordInputValue ? "text" : "password"}
                   placeholder="Confirmação da senha"
+                  autoComplete="off"
                   {...register("confirm_password")}
                 />
                 {
@@ -235,6 +256,7 @@ export function SignUp() {
                 <input
                   type={ viewConfirmPasswordInputValue ? "text" : "password"}
                   placeholder="Confirmação da senha"
+                  autoComplete="off"
                   {...register("confirm_password")}
                 />
                 {
@@ -251,7 +273,21 @@ export function SignUp() {
           )}
         </Fields>
 
-        <Button type="submit">Cadastrar</Button>
+        {
+          isLoading
+          ? <Button
+              type="submit"
+              className="isLoading"
+            > Cadastrar
+              <Lottie
+                options={loadingSpinnerOptions}
+                height={'3rem'}
+                width={'4rem'}
+                isClickToPauseDisabled={true}
+              />
+            </Button>
+          : <Button type="submit">Cadastrar</Button>
+        }
 
         <Link>
           <a href="/">Voltar para o Login</a>

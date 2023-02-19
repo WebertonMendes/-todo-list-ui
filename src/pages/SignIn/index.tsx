@@ -1,4 +1,7 @@
 import * as yup from "yup";
+import Lottie from 'react-lottie';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { MdAlternateEmail, MdLockOutline } from "react-icons/md";
@@ -7,9 +10,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 import { api } from "../../services/api";
 import { Logo } from "../../components/Logo";
+import { loadingSpinner } from "../../assets/animations"
 import { Container, Form, Fields, InputGroup, Button, Link } from "./styles";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 interface LoginFormData {
   email: string;
@@ -31,6 +33,7 @@ const userLoginFormSchema = yup.object().shape({
 
 export function SignIn() {
   const [viewPasswordInputValue, setViewPasswordInputValue] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     reset,
@@ -41,6 +44,12 @@ export function SignIn() {
     resolver: yupResolver(userLoginFormSchema),
   });
 
+  const loadingSpinnerOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: loadingSpinner,
+  }
+
   const navigate = useNavigate();
 
   function handleViewPasswordInputValue() {
@@ -48,39 +57,44 @@ export function SignIn() {
   }
 
   const handleUserLogin: SubmitHandler<LoginFormData> = async (data) => {
+    setIsLoading(true);
+
     await api.post("auth", data)
     .then((response) => {
-      if (response.status === 201)
+      const token = response.data.access_token;
+      localStorage.setItem("@ToDoList:token", token);
+
+      setTimeout(() => {
+        setIsLoading(false);
         reset();
-
-        const token = response.data.access_token;
-        localStorage.setItem("@ToDoList:token", token);
-
         navigate("/todo-list");
+      }, 2000);
     })
     .catch((error) => {
+      setIsLoading(false);
+
       if (error.response?.status === 401) {
         toast("Usuário ou senha incorretos!", {
           position: "top-right",
           autoClose: 8000,
-          hideProgressBar: true,
+          hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "colored",
+          theme: "light",
           type: "error",
         });
       } else {
         toast("Erro ao autenticar o suário, contate o administrador.!", {
           position: "top-right",
           autoClose: 8000,
-          hideProgressBar: true,
+          hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-          theme: "colored",
+          theme: "light",
           type: "error",
         });
       }
@@ -115,6 +129,7 @@ export function SignIn() {
                 <input
                   type="email"
                   placeholder="Informe o e-mail"
+                  autoComplete="on"
                   {...register("email")}
                 />
               </InputGroup>
@@ -127,6 +142,7 @@ export function SignIn() {
                 <input
                   type="email"
                   placeholder="Informe o e-mail"
+                  autoComplete="on"
                   {...register("email")}
                 />
               </InputGroup>
@@ -140,6 +156,7 @@ export function SignIn() {
                 <input
                   type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
+                  autoComplete="off"
                   {...register("password")}
                 />
                 {
@@ -161,6 +178,7 @@ export function SignIn() {
                 <input
                   type={ viewPasswordInputValue ? "text" : "password"}
                   placeholder="Informe a senha"
+                  autoComplete="off"
                   {...register("password")}
                 />
                 {
@@ -177,7 +195,21 @@ export function SignIn() {
           )}
         </Fields>
 
-        <Button type="submit">Acessar</Button>
+        {
+          isLoading
+          ? <Button
+              type="submit"
+              className="isLoading"
+            > Acessar
+              <Lottie
+                options={loadingSpinnerOptions}
+                height={'3rem'}
+                width={'4rem'}
+                isClickToPauseDisabled={true}
+              />
+            </Button>
+          : <Button type="submit">Acessar</Button>
+        }
 
         <Link>
           <p>Não tem uma conta?</p>
