@@ -5,7 +5,8 @@ export const GlobalStyle = createGlobalStyle`
     --blue-900: #24418B;
     --blue-500: #2B60E4;
     --blue-300: #557FEB;
-    --blue-100: #C6D5FC;
+    --blue-200: #C6D5FC;
+    --blue-100: #C6D5FC5A;
 
     --green-500: #108B62;
     --green-300: #63EEB4;
@@ -22,8 +23,9 @@ export const GlobalStyle = createGlobalStyle`
     --gray-700: #0D0D0D;
     --gray-500: #313131;
     --gray-400: #4D4D4D;
-    --gray-300: #CCCCCC;
-    --gray-200: #E8E9F0;
+    --gray-300: #6E6E6E;
+    --gray-200: #CCCCCC;
+    --gray-100: #E8E9F0;
 
     --text-tile: #212533;
     --text-body: #767985;

@@ -14,9 +14,12 @@ export const Container = styled.div`
 
   padding-bottom: 4rem;
 
+  animation-name: fadeIn;
+  animation-duration: 2s;
+
   hr {
     width: 50vw;
-    border-top: 1px dotted var(--gray-300);
+    border-top: 1px dotted var(--gray-200);
     margin-top: 0.5rem;
 
     @media (max-width: 1080px) {
@@ -31,6 +34,11 @@ export const Container = styled.div`
   .error-msg {
     font-size: 0.8rem;
     color: var(--red-300);
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
   }
 `;
 
@@ -175,14 +183,20 @@ export const Empty = styled.div`
   padding: 2rem;
   margin-top: 2rem;
 
+  svg#clipboard {
+    width: 4rem;
+    height: 4rem;
+    stroke: var(--gray-300);
+  }
+
   span {
     font-weight: bold;
     margin-top: 0.8rem;
-    color: var(--gray-500);
+    color: var(--gray-300);
   }
 
   p {
-    color: var(--gray-400);
+    color: var(--gray-300);
   }
 `;
 
@@ -229,7 +243,7 @@ export const Item = styled.div<StylesProps>`
       ? `background-color: var(--orange-100);`
       : category === 3
       ? `background-color: var(--red-100);`
-      : `background: var(--gray-200);`
+      : `background: var(--gray-100);`
   }
 `;
 
@@ -314,7 +328,7 @@ export const Actions = styled.div<StylesProps>`
 
     ${({ attachment }) =>
       attachment &&
-        `background-color: var(--blue-100);
+        `background-color: var(--blue-200);
          padding: .2rem;
          border-radius: 50%;
         `
@@ -358,7 +372,7 @@ export const Logout = styled.div`
   transition: 0.4s;
 
   &:hover {
-    background-color: var(--gray-300);
+    background-color: var(--gray-200);
     cursor: pointer;
   }
 `;

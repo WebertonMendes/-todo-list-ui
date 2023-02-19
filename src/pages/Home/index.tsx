@@ -31,8 +31,9 @@ import {
   Actions,
   Categories,
 } from "./styles";
-import clipboardImg from "../../assets/clipboard.svg";
+import { ReactComponent as ClipboardImg} from "../../assets/clipboard.svg";
 import { Header } from "../../components/Header";
+import { LoadingPage } from "../../components/LoadingPage";
 import { api } from "../../services/api";
 
 interface Task {
@@ -67,6 +68,7 @@ export function Home() {
   const [taskAddCategory, setTaskAddCategory] = useState(false);
   const [categoryIsEdit, setCategoryIsEdit] = useState("");
   const [order, setOrder] = useState(1);
+  const [loadingPage, setLoadingPage] = useState(false);
 
   const { reset,register,handleSubmit,formState: { errors } } = useForm<CreateTaskFormData>({
     resolver: yupResolver(createTaskFormSchema),
@@ -95,13 +97,13 @@ export function Home() {
           toast("Task criada com sucesso!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
-            type: "success",
+            theme: "light",
+            type: "info",
           });
       })
       .catch((error) => {
@@ -109,12 +111,12 @@ export function Home() {
           toast("A sessão expirou, faça o login novamente.", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
 
@@ -126,12 +128,12 @@ export function Home() {
           toast("Erro ao criar a task, contate o administrador.!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
         }
@@ -206,13 +208,13 @@ export function Home() {
           toast("Task atualizada com sucesso!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
-            type: "success",
+            theme: "light",
+            type: "info",
           });
       })
       .catch((error) => {
@@ -220,12 +222,12 @@ export function Home() {
           toast("A sessão expirou, faça o login novamente.", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
 
@@ -237,12 +239,12 @@ export function Home() {
           toast("Erro ao atualizar a task, contate o administrador.!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
         }
@@ -269,13 +271,13 @@ export function Home() {
           toast("Task removida com sucesso!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
-            type: "success",
+            theme: "light",
+            type: "info",
           });
       })
       .catch((error) => {
@@ -283,12 +285,12 @@ export function Home() {
           toast("A sessão expirou, faça o login novamente.", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
 
@@ -300,12 +302,12 @@ export function Home() {
           toast("Erro ao remover a task, contate o administrador.!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
         }
@@ -345,13 +347,13 @@ export function Home() {
             toast("Arquivo anexado com sucesso!", {
               position: "top-right",
               autoClose: 8000,
-              hideProgressBar: true,
+              hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: false,
               draggable: false,
               progress: undefined,
-              theme: "colored",
-              type: "success",
+              theme: "light",
+              type: "info",
             });
         })
         .catch((error) => {
@@ -359,12 +361,12 @@ export function Home() {
             toast("A sessão expirou, faça o login novamente.", {
               position: "top-right",
               autoClose: 8000,
-              hideProgressBar: true,
+              hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: false,
               draggable: false,
               progress: undefined,
-              theme: "colored",
+              theme: "light",
               type: "error",
             });
 
@@ -376,12 +378,12 @@ export function Home() {
             toast("Erro ao anexar o arquivo, contate o administrador.!", {
               position: "top-right",
               autoClose: 8000,
-              hideProgressBar: true,
+              hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: false,
               draggable: false,
               progress: undefined,
-              theme: "colored",
+              theme: "light",
               type: "error",
             });
           }
@@ -431,12 +433,12 @@ export function Home() {
           toast("A sessão expirou, faça o login novamente.", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
 
@@ -448,12 +450,12 @@ export function Home() {
           toast("Erro ao buscar as tasks, contate o administrador.!", {
             position: "top-right",
             autoClose: 8000,
-            hideProgressBar: true,
+            hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
-            theme: "colored",
+            theme: "light",
             type: "error",
           });
         }
@@ -461,6 +463,7 @@ export function Home() {
   }
 
   useEffect(() => {
+    setLoadingPage(true)
     const token = localStorage.getItem("@ToDoList:token");
 
     if (!token) {
@@ -468,216 +471,223 @@ export function Home() {
       navigate("/");
     } else {
       getListTasks(token);
+
+      setTimeout(() => {
+        setLoadingPage(false)
+      }, 2000)
     }
   }, []);
 
   return (
     <>
-      <Header />
+      { loadingPage
+        ?
+          <LoadingPage />
+        :
+          <>
+            <Header />
 
-      <Container>
-        <ToastContainer
-          position="top-right"
-          autoClose={8000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover={false}
-          theme="light"
-        />
+            <Container>
+              <ToastContainer
+                position="top-right"
+                autoClose={8000}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable={false}
+                pauseOnHover={false}
+                theme="light"
+              />
 
-        <Form onSubmit={handleSubmit(handleTaskCreate)}>
-          <input
-            type="text"
-            placeholder="Adicione uma nova tarefa"
-            {...register("description")}
-          />
+              <Form onSubmit={handleSubmit(handleTaskCreate)}>
+                <input
+                  type="text"
+                  placeholder="Adicione uma nova tarefa"
+                  {...register("description")}
+                />
 
-          <Button type="submit">
-            Criar
-            <MdAddCircleOutline size={18} style={{ fill: "var(--shape)" }} />
-          </Button>
-        </Form>
-        <p className="error-msg">{errors.description?.message}</p>
+                <Button type="submit">
+                  Criar
+                  <MdAddCircleOutline size={18} style={{ fill: "var(--shape)" }} />
+                </Button>
+              </Form>
+              <p className="error-msg">{errors.description?.message}</p>
 
-        {tasksList.length > 1 && (
-          <Counters>
-            <div className="resumeTasks">
-              <Count finished={false}>
-                <p>Pendentes</p>
-                <span>{tasksNotFinished}</span>
-              </Count>
+              <Counters>
+                <div className="resumeTasks">
+                  <Count finished={false}>
+                    <p>Pendentes</p>
+                    <span>{tasksNotFinished}</span>
+                  </Count>
 
-              <Count finished={true}>
-                <p>Concluídas</p>
-                <span>{tasksFinished}</span>
-              </Count>
-            </div>
+                  <Count finished={true}>
+                    <p>Concluídas</p>
+                    <span>{tasksFinished}</span>
+                  </Count>
+                </div>
 
-            <div
-              title="Reordernar"
-              className="sortIcon"
-              onClick={() => handleTasksOrder()}
-            >
-              <MdSort />
-            </div>
-          </Counters>
-        )}
+                <div
+                  title="Reordernar"
+                  className="sortIcon"
+                  onClick={() => handleTasksOrder()}
+                >
+                  <MdSort />
+                </div>
+              </Counters>
 
-        {tasksList.length < 1 && <hr />}
+              <List>
+                {tasksList.length < 1 ? (
+                  <Empty>
+                    <ClipboardImg id="clipboard" />
 
-        <List>
-          {tasksList.length < 1 ? (
-            <Empty>
-              <img src={clipboardImg} alt="Lista Vazia" />
-
-              <span> Você ainda não tem tarefas cadastradas</span>
-              <p>Crie tarefas e organize seus itens a fazer</p>
-            </Empty>
-          ) : (
-            <>
-              {tasksList.map((task) =>
-                task.is_finished ? (
-                  <Item key={task.id}>
-                    <div
-                      className="checked"
-                      onClick={() =>
-                        handleTaskUpdate({ id: task.id, is_finished: !task.is_finished})
-                      }
-                    >
-                      <MdCheckCircle />
-                    </div>
-
-                    <TextThrough>{task.description}</TextThrough>
-
-                    <Actions>
-                      <div
-                        title="Remover"
-                        className="trashIcon"
-                        onClick={() => handleTaskRemove(task.id)}
-                      >
-                        <MdDelete />
-                      </div>
-                    </Actions>
-                  </Item>
+                    <span> Você ainda não tem tarefas cadastradas</span>
+                    <p>Crie tarefas e organize seus itens a fazer</p>
+                  </Empty>
                 ) : (
-                  <Item
-                    key={task.id}
-                    category={Number(task.category_id)}
-                  >
-                    <div
-                      className="no-checked"
-                      onClick={() =>
-                        handleTaskUpdate({id: task.id, is_finished: !task.is_finished})
-                      }
-                    >
-                      <MdRadioButtonUnchecked />
-                    </div>
-
-                    <TextNoThrough>{task.description}</TextNoThrough>
-
-                    <Actions attachment={task.attachment}>
-                      <div
-                        title="Anexar"
-                        className="attachmentIcon"
-                      >
-                        {task.attachment
-                          ?
-                            <a href={`http://localhost:3333/api/v1/tasks/download/${task.id}`} target="_blank">
-                              <MdAttachFile />
-                            </a>
-                          :
-                            <>
-                              <label htmlFor="attachment">
-                                <MdAttachFile />
-                              </label>
-
-                              <input
-                                type="file"
-                                id="attachment"
-                                name="attachment"
-                                accept="application/pdf"
-                                onChange={(e) =>
-                                  handleTaskAttachment(task.id, e.target.files)
-                                }
-                              />
-                            </>
-                        }
-                      </div>
-
-                      <div
-                        title="Categorizar"
-                        className="categoryIcon"
-                        onClick={() => {
-                          setTaskAddCategory((current) => !current);
-                          setCategoryIsEdit(task.id);
-                        }}
-                      >
-                        <MdBookmark />
-                      </div>
-
-                      <div
-                        title="Remover"
-                        className="trashIcon"
-                        onClick={() => handleTaskRemove(task.id)}
-                      >
-                        <MdDelete />
-                      </div>
-
-                      {taskAddCategory && task.id === categoryIsEdit && (
-                        <Categories>
-                          <button
-                            className="high"
-                            value="3"
-                            onClick={(e) =>
-                              handleTaskCategory(
-                                task.id,
-                                task.category_id,
-                                (e.target as HTMLButtonElement).value
-                              )
+                  <>
+                    {tasksList.map((task) =>
+                      task.is_finished ? (
+                        <Item key={task.id}>
+                          <div
+                            className="checked"
+                            onClick={() =>
+                              handleTaskUpdate({ id: task.id, is_finished: !task.is_finished})
                             }
-                          >Alta</button>
+                          >
+                            <MdCheckCircle />
+                          </div>
 
-                          <button
-                            className="average"
-                            value="2"
-                            onClick={(e) =>
-                              handleTaskCategory(
-                                task.id,
-                                task.category_id,
-                                (e.target as HTMLButtonElement).value
-                              )
+                          <TextThrough>{task.description}</TextThrough>
+
+                          <Actions>
+                            <div
+                              title="Remover"
+                              className="trashIcon"
+                              onClick={() => handleTaskRemove(task.id)}
+                            >
+                              <MdDelete />
+                            </div>
+                          </Actions>
+                        </Item>
+                      ) : (
+                        <Item
+                          key={task.id}
+                          category={Number(task.category_id)}
+                        >
+                          <div
+                            className="no-checked"
+                            onClick={() =>
+                              handleTaskUpdate({id: task.id, is_finished: !task.is_finished})
                             }
-                          >Média</button>
+                          >
+                            <MdRadioButtonUnchecked />
+                          </div>
 
-                          <button
-                            className="low"
-                            value="1"
-                            onClick={(e) =>
-                              handleTaskCategory(
-                                task.id,
-                                task.category_id,
-                                (e.target as HTMLButtonElement).value
-                              )
-                            }
-                          >Baixa</button>
-                        </Categories>
-                      )}
-                    </Actions>
-                  </Item>
-                )
-              )}
-            </>
-          )}
-        </List>
+                          <TextNoThrough>{task.description}</TextNoThrough>
 
-        <Logout title="Logout" onClick={handleLogout}>
-          <AiOutlinePoweroff size={22} style={{ fill: "var(--gray-400)" }} />
-        </Logout>
-      </Container>
+                          <Actions attachment={task.attachment}>
+                            <div
+                              title="Anexar"
+                              className="attachmentIcon"
+                            >
+                              {task.attachment
+                                ?
+                                  <a href={`http://localhost:3333/api/v1/tasks/download/${task.id}`} target="_blank">
+                                    <MdAttachFile />
+                                  </a>
+                                :
+                                  <>
+                                    <label htmlFor="attachment">
+                                      <MdAttachFile />
+                                    </label>
+
+                                    <input
+                                      type="file"
+                                      id="attachment"
+                                      name="attachment"
+                                      accept="application/pdf"
+                                      onChange={(e) =>
+                                        handleTaskAttachment(task.id, e.target.files)
+                                      }
+                                    />
+                                  </>
+                              }
+                            </div>
+
+                            <div
+                              title="Categorizar"
+                              className="categoryIcon"
+                              onClick={() => {
+                                setTaskAddCategory((current) => !current);
+                                setCategoryIsEdit(task.id);
+                              }}
+                            >
+                              <MdBookmark />
+                            </div>
+
+                            <div
+                              title="Remover"
+                              className="trashIcon"
+                              onClick={() => handleTaskRemove(task.id)}
+                            >
+                              <MdDelete />
+                            </div>
+
+                            {taskAddCategory && task.id === categoryIsEdit && (
+                              <Categories>
+                                <button
+                                  className="high"
+                                  value="3"
+                                  onClick={(e) =>
+                                    handleTaskCategory(
+                                      task.id,
+                                      task.category_id,
+                                      (e.target as HTMLButtonElement).value
+                                    )
+                                  }
+                                >Alta</button>
+
+                                <button
+                                  className="average"
+                                  value="2"
+                                  onClick={(e) =>
+                                    handleTaskCategory(
+                                      task.id,
+                                      task.category_id,
+                                      (e.target as HTMLButtonElement).value
+                                    )
+                                  }
+                                >Média</button>
+
+                                <button
+                                  className="low"
+                                  value="1"
+                                  onClick={(e) =>
+                                    handleTaskCategory(
+                                      task.id,
+                                      task.category_id,
+                                      (e.target as HTMLButtonElement).value
+                                    )
+                                  }
+                                >Baixa</button>
+                              </Categories>
+                            )}
+                          </Actions>
+                        </Item>
+                      )
+                    )}
+                  </>
+                )}
+              </List>
+
+              <Logout title="Logout" onClick={handleLogout}>
+                <AiOutlinePoweroff size={22} style={{ fill: "var(--gray-400)" }} />
+              </Logout>
+            </Container>
+          </>
+      }
     </>
   );
 }
