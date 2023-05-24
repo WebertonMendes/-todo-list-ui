@@ -35,6 +35,7 @@ import { ReactComponent as ClipboardImg} from "../../assets/clipboard.svg";
 import { Header } from "../../components/Header";
 import { LoadingPage } from "../../components/LoadingPage";
 import { api } from "../../services/api";
+import { Pagination } from "../../components/Pagination";
 
 interface Task {
   id: string;
@@ -43,6 +44,19 @@ interface Task {
   attachment: boolean;
   category_id: number;
   is_finished: boolean;
+}
+
+interface Pagination {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+interface ListTask {
+  items: Task[];
+  meta: Pagination;
 }
 
 interface UpdateTask {
@@ -69,12 +83,15 @@ export function Home() {
   const [categoryIsEdit, setCategoryIsEdit] = useState("");
   const [order, setOrder] = useState(1);
   const [loadingPage, setLoadingPage] = useState(false);
+  const [tasksListPagination, setTasksListPagination] = useState<Pagination | null>(null);
+  const [page, setPage] = useState(1);
 
   const { reset,register,handleSubmit,formState: { errors } } = useForm<CreateTaskFormData>({
     resolver: yupResolver(createTaskFormSchema),
   });
 
   const navigate = useNavigate();
+  const defaultLimitData = import.meta.env.VITE_PAGINATION_LIMIT;
 
   const handleTaskCreate: SubmitHandler<CreateTaskFormData> = async (
     values
@@ -204,6 +221,7 @@ export function Home() {
           },
       })
       .then((response) => {
+        console.log(response);
         if (response.status === 200)
           toast("Task atualizada com sucesso!", {
             position: "top-right",
@@ -406,61 +424,72 @@ export function Home() {
   };
 
   async function getListTasks(token: string) {
-    await api
-      .get("tasks", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        const tasks: Task[] = response.data;
-        setTasksList(tasks);
+    await api.get(`tasks?page=${page}&limit=${defaultLimitData}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((response) => {
+      const tasks: ListTask = response.data;
+      setTasksList(tasks.items);
+      setTasksListPagination(tasks.meta)
 
-        localStorage.setItem("@ToDoList:tasksList", JSON.stringify(tasks));
+      localStorage.setItem("@ToDoList:tasksList", JSON.stringify(tasks));
 
-        const filterTasksFinished = tasks.filter(
-          (task) => task.is_finished === true
-        );
-        const filterTasksNotFinished = tasks.filter(
-          (task) => task.is_finished === false
-        );
+      const filterTasksFinished = tasks.items.filter(
+        (task) => task.is_finished === true
+      );
+      const filterTasksNotFinished = tasks.items.filter(
+        (task) => task.is_finished === false
+      );
 
-        setTasksFinished(filterTasksFinished.length);
-        setTasksNotFinished(filterTasksNotFinished.length);
-      })
-      .catch((error) => {
-        if (error.response?.status === 401) {
-          toast("A sessão expirou, faça o login novamente.", {
-            position: "top-right",
-            autoClose: 8000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-            type: "error",
-          });
+      setTasksFinished(filterTasksFinished.length);
+      setTasksNotFinished(filterTasksNotFinished.length);
+    })
+    .catch((error) => {
+      if (error.response?.status === 401) {
+        toast("A sessão expirou, faça o login novamente.", {
+          position: "top-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+          type: "error",
+        });
 
-          localStorage.clear();
-          navigate("/");
-        } else {
-          console.error(error);
+        localStorage.clear();
+        navigate("/");
+      } else {
+        console.error(error);
 
-          toast("Erro ao buscar as tasks, contate o administrador.!", {
-            position: "top-right",
-            autoClose: 8000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-            type: "error",
-          });
-        }
-      });
+        toast("Erro ao buscar as tasks, contate o administrador.!", {
+          position: "top-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+          type: "error",
+        });
+      }
+    });
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("@ToDoList:token");
+
+    if (!token) {
+      localStorage.clear()
+      navigate("/")
+    } else {
+      getListTasks(token)
+    }
+  }, [page])
 
   useEffect(() => {
     setLoadingPage(true)
@@ -681,6 +710,16 @@ export function Home() {
                   </>
                 )}
               </List>
+
+              {
+                tasksListPagination && tasksListPagination.totalPages > 1 &&
+                  <Pagination
+                    totalCountOfRegisters={tasksListPagination.totalItems}
+                    registersPerPage={tasksListPagination.itemsPerPage}
+                    currentPage={tasksListPagination.currentPage}
+                    onPageChange={setPage}
+                  />
+              }
 
               <Logout title="Logout" onClick={handleLogout}>
                 <AiOutlinePoweroff size={22} style={{ fill: "var(--gray-400)" }} />
