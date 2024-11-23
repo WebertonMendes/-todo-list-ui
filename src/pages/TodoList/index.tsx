@@ -52,9 +52,15 @@ interface Pagination {
   currentPage: number;
 }
 
+interface TaskSummary {
+  finished: number
+  unfinished: number
+}
+
 interface ListTask {
   items: Task[];
   meta: Pagination;
+  summary: TaskSummary;
 }
 
 interface UpdateTask {
@@ -433,15 +439,11 @@ export function TodoList() {
 
       localStorage.setItem("@ToDoList:tasksList", JSON.stringify(tasks));
 
-      const filterTasksFinished = tasks.items.filter(
-        (task) => task.is_finished === true
-      );
-      const filterTasksNotFinished = tasks.items.filter(
-        (task) => task.is_finished === false
-      );
+      const filterTasksFinished = tasks.summary.finished;
+      const filterTasksNotFinished = tasks.summary.unfinished;
 
-      setTasksFinished(filterTasksFinished.length);
-      setTasksNotFinished(filterTasksNotFinished.length);
+      setTasksFinished(filterTasksFinished);
+      setTasksNotFinished(filterTasksNotFinished);
     })
     .catch((error) => {
       if (error.response?.status === 401) {
