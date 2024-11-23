@@ -9,7 +9,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi"
 import { ToastContainer, toast } from "react-toastify";
 
 import { api } from "../../services/api";
-import { Logo } from "../../components/Logo";
+import { Logo } from "../../components/global/Logo";
 import { loadingSpinner } from "../../assets/animations"
 import { Container, Form, Fields, InputGroup, Button, Link } from "./styles";
 

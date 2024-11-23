@@ -117,7 +117,7 @@ export const Link = styled.div`
   font-size: 0.8rem;
 
   a {
-    color: var(--blue-900);
+    color: var(--blue-800);
     transition: 0.4s;
   }
 

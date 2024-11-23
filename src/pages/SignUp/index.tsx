@@ -17,7 +17,7 @@ import {
 } from "../SignIn/styles";
 import { Link } from "./styles";
 import { api } from "../../services/api";
-import { Logo } from "../../components/Logo";
+import { Logo } from "../../components/global/Logo";
 import { loadingSpinner } from "../../assets/animations"
 
 interface CreateUserFormData {
